@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.bazaarvoice.commons</groupId>
+    <artifactId>bv-opensource-super-pom</artifactId>
+    <version>1.0</version>
+  </parent>
+
+  <groupId>com.bazaarvoice.dropwizard</groupId>
+  <artifactId>dropwizard-redirect-bundle</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>Dropwizard Redirect Bundle</name>
+  <description>A simple bundle for DropWizard that allows for HTTP redirects.</description>
+
+  <scm>
+    <url>https://github.com/bazaarvoice/dropwizard-redirect-bundle</url>
+    <connection>scm:git:git@github.com:bazaarvoice/dropwizard-redirect-bundle.git</connection>
+    <developerConnection>
+      scm:git:git@github.com:bazaarvoice/dropwizard-redirect-bundle.git
+    </developerConnection>
+  </scm>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.yammer.dropwizard</groupId>
+      <artifactId>dropwizard-core</artifactId>
+      <version>0.5.1</version>
+    </dependency>
+  </dependencies>
+</project>
