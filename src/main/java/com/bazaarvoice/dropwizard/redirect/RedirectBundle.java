@@ -2,6 +2,7 @@ package com.bazaarvoice.dropwizard.redirect;
 
 import com.google.common.collect.ImmutableMap;
 import com.yammer.dropwizard.Bundle;
+import com.yammer.dropwizard.config.Bootstrap;
 import com.yammer.dropwizard.config.Environment;
 
 import javax.servlet.Filter;
@@ -27,7 +28,11 @@ public class RedirectBundle implements Bundle {
     }
 
     @Override
-    public void initialize(Environment environment) {
+    public void initialize(Bootstrap<?> bootstrap) {
+    }
+
+    @Override
+    public void run(Environment environment) {
         environment.addFilter(new Filter() {
             @Override
             public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
