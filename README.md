@@ -21,7 +21,7 @@ public class MyService extends Service<...> {
     public void initialize(... bootstrap) {
         bootstrap.addBundle(new RedirectBundle(ImmutableMap.<String, String>builder()
                 .put("/", "/dashboard/index.html")
-                .put("/index.html", "/dashboard/index.html")
+                .put("/index.htm", "/dashboard/index.html")
                 .build()));
     }
 
