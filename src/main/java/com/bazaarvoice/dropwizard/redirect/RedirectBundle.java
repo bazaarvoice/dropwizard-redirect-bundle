@@ -1,6 +1,7 @@
 package com.bazaarvoice.dropwizard.redirect;
 
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
+import com.google.common.net.HttpHeaders;
 import com.yammer.dropwizard.Bundle;
 import com.yammer.dropwizard.config.Bootstrap;
 import com.yammer.dropwizard.config.Environment;
@@ -14,17 +15,14 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Map;
+import java.util.Collections;
+import java.util.List;
 
 public class RedirectBundle implements Bundle {
-    private final Map<String, String> uriMapping;
+    private final List<Redirect> redirects = Lists.newArrayList();
 
-    public RedirectBundle(String requestUri, String redirectUri) {
-        this.uriMapping = ImmutableMap.of(requestUri, redirectUri);
-    }
-
-    public RedirectBundle(Map<String, String> uriMapping) {
-        this.uriMapping = ImmutableMap.copyOf(uriMapping);
+    public RedirectBundle(Redirect... redirects) {
+        Collections.addAll(this.redirects, redirects);
     }
 
     @Override
@@ -40,14 +38,15 @@ public class RedirectBundle implements Bundle {
                 if (req instanceof HttpServletRequest) {
                     HttpServletRequest request = (HttpServletRequest) req;
 
-                    String uri = request.getRequestURI();
-                    String redirectUri = uriMapping.get(uri);
-                    if (redirectUri != null) {
-                        HttpServletResponse response = (HttpServletResponse) res;
-                        response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
-                        response.setHeader("Location", redirectUri);
-                        response.setHeader("Connection", "close");
-                        return;
+                    for (Redirect redirect : redirects) {
+                        String redirectUrl = redirect.getRedirect(request);
+                        if (redirectUrl != null) {
+                            HttpServletResponse response = (HttpServletResponse) res;
+
+                            response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+                            response.setHeader(HttpHeaders.LOCATION, redirectUrl);
+                            return;
+                        }
                     }
                 }
 
