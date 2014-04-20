@@ -6,13 +6,16 @@ Just add this maven dependency:
 <dependency>
   <groupId>com.bazaarvoice.dropwizard</groupId>
   <artifactId>dropwizard-redirect-bundle</artifactId>
-  <version>0.2.0</version>
+  <version>0.3.0</version>
 </dependency>
 ```
 
+For Dropwizard 0.6.2: use v0.2.0
+For Dropwizard 0.7.0: use v0.3.0
+
 To redirect one URI to another URI:
 ```java
-public class MyService extends Service<...> {
+public class MyApplication extends Application<...> {
   // ...
 
   @Override
@@ -28,7 +31,7 @@ public class MyService extends Service<...> {
 
 To redirect many URIs at once:
 ```java
-public class MyService extends Service<...> {
+public class MyApplication extends Application<...> {
   // ...
 
   @Override
@@ -47,7 +50,7 @@ public class MyService extends Service<...> {
 
 To redirect non-HTTPS traffic to the HTTPS port:
 ```java
-public class MyService extends Service<...> {
+public class MyApplication extends Application<...> {
   // ...
 
   @Override
