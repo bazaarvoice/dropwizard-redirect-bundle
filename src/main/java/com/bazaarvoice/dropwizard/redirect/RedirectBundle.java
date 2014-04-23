@@ -31,7 +31,7 @@ public class RedirectBundle implements Bundle {
 
     @Override
     public void run(Environment environment) {
-        environment.servlets().addFilter(this.getClass().getName(), new Filter() {
+        environment.servlets().addFilter("redirect", new Filter() {
             @Override
             public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
                     throws IOException, ServletException {
