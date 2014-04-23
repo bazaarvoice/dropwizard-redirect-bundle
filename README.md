@@ -10,8 +10,8 @@ Just add this maven dependency:
 </dependency>
 ```
 
-For Dropwizard 0.6.2: use v0.2.0
-For Dropwizard 0.7.0: use v0.3.0
+- For Dropwizard 0.6.2: use version < 0.3.0
+- For Dropwizard 0.7.0: use version >= 0.3.0
 
 To redirect one URI to another URI:
 ```java
