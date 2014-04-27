@@ -2,9 +2,9 @@ package com.bazaarvoice.dropwizard.redirect;
 
 import com.google.common.collect.Lists;
 import com.google.common.net.HttpHeaders;
-import com.yammer.dropwizard.Bundle;
-import com.yammer.dropwizard.config.Bootstrap;
-import com.yammer.dropwizard.config.Environment;
+import io.dropwizard.Bundle;
+import io.dropwizard.setup.Bootstrap;
+import io.dropwizard.setup.Environment;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -31,7 +31,7 @@ public class RedirectBundle implements Bundle {
 
     @Override
     public void run(Environment environment) {
-        environment.addFilter(new Filter() {
+        environment.servlets().addFilter("redirect", new Filter() {
             @Override
             public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
                     throws IOException, ServletException {
@@ -58,6 +58,6 @@ public class RedirectBundle implements Bundle {
 
             @Override
             public void init(FilterConfig filterConfig) throws ServletException { /* unused */ }
-        }, "*");
+        }).addMappingForUrlPatterns(null, false, "*");
     }
 }
