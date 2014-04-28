@@ -10,7 +10,7 @@
 
   <groupId>com.bazaarvoice.dropwizard</groupId>
   <artifactId>dropwizard-redirect-bundle</artifactId>
-  <version>0.3.0-SNAPSHOT</version>
+  <version>0.3.0</version>
   <packaging>jar</packaging>
 
   <name>Dropwizard Redirect Bundle</name>
