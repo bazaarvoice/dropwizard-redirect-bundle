@@ -6,7 +6,7 @@ Just add this maven dependency:
 <dependency>
   <groupId>com.bazaarvoice.dropwizard</groupId>
   <artifactId>dropwizard-redirect-bundle</artifactId>
-  <version>0.3.0</version>
+  <version>0.3.1</version>
 </dependency>
 ```
 
