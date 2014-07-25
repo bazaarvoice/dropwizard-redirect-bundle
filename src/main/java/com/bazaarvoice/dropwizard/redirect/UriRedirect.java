@@ -1,57 +1,78 @@
 package com.bazaarvoice.dropwizard.redirect;
 
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-/** Redirects requests coming on a specific source URI to a target URI. */
+/** Regular expression based redirect.  Has access to the full URI. */
 public class UriRedirect implements Redirect {
-    private final Map<String, String> uriMapping;
-    private final boolean keepParameters;
+    private final List<Entry> entries;
 
-    public UriRedirect(String sourceUri, String targetUri) {
-        this(sourceUri, targetUri, true);
-    }
+    public UriRedirect(String regex, String replacement) {
+        checkNotNull(regex);
+        checkNotNull(replacement);
 
-    public UriRedirect(String sourceUri, String targetUri, boolean keepParameters) {
-        checkNotNull(sourceUri);
-        checkNotNull(targetUri);
-
-        uriMapping = ImmutableMap.of(sourceUri, targetUri);
-        this.keepParameters = keepParameters;
+        entries = ImmutableList.of(new Entry(Pattern.compile(regex), replacement));
     }
 
     public UriRedirect(Map<String, String> uriMap) {
-        this(uriMap, true);
-    }
-
-    public UriRedirect(Map<String, String> uriMap, boolean keepParameters) {
         checkNotNull(uriMap);
 
-        uriMapping = ImmutableMap.copyOf(uriMap);
-        this.keepParameters = keepParameters;
+        entries = Lists.newArrayList();
+        for (Map.Entry<String, String> entry : uriMap.entrySet()) {
+            String regex = entry.getKey();
+            String replacement = entry.getValue();
+            entries.add(new Entry(Pattern.compile(regex), replacement));
+        }
     }
 
     /** {@inheritDoc} */
     @Override
     public String getRedirect(HttpServletRequest request) {
-        String uri = uriMapping.get(request.getRequestURI());
-        if (uri == null) {
-            return null;
-        }
-
-        StringBuilder redirect = new StringBuilder(uri);
-        if (keepParameters) {
-            String query = request.getQueryString();
-            if (query != null) {
-                redirect.append('?');
-                redirect.append(query);
+        String uri = getFullURI(request);
+        for (Entry entry : entries) {
+            Matcher matcher = entry.getRegex().matcher(uri);
+            if (matcher.matches()) {
+                return matcher.replaceAll(entry.getReplacement());
             }
         }
 
-        return redirect.toString();
+        return null;
+    }
+
+    private static String getFullURI(HttpServletRequest request) {
+        StringBuffer requestURL = request.getRequestURL();
+        String queryString = request.getQueryString();
+
+        if (queryString == null) {
+            return requestURL.toString();
+        } else {
+            return requestURL.append('?').append(queryString).toString();
+        }
+    }
+
+    private static final class Entry {
+        Pattern regex;
+        String replacement;
+
+        Entry(Pattern regex, String replacement) {
+            this.regex = regex;
+            this.replacement = replacement;
+        }
+
+        Pattern getRegex() {
+            return regex;
+        }
+
+        String getReplacement() {
+            return replacement;
+        }
     }
 }
