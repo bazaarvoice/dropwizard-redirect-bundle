@@ -10,7 +10,7 @@
 
   <groupId>com.bazaarvoice.dropwizard</groupId>
   <artifactId>dropwizard-redirect-bundle</artifactId>
-  <version>0.3.1-SNAPSHOT</version>
+  <version>0.4.0</version>
   <packaging>jar</packaging>
 
   <name>Dropwizard Redirect Bundle</name>
@@ -22,6 +22,7 @@
     <developerConnection>
       scm:git:git@github.com:bazaarvoice/dropwizard-redirect-bundle.git
     </developerConnection>
+    <tag>dropwizard-redirect-bundle-0.4.0</tag>
   </scm>
 
   <properties>
