@@ -1,3 +1,7 @@
+**NOTE: THIS PROJECT IS DEPRECATED.** This projects is no longer maintained.  It is deprecated for
+[dropwizard-bundles maintained fork](https://github.com/dropwizard-bundles/dropwizard-redirect-bundle).
+Users of this project should update their project dependencies appropriately.
+
 Getting Started
 ===============
 
