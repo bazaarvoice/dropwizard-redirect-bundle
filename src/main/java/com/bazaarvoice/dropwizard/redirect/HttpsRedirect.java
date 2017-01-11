@@ -1,8 +1,13 @@
 package com.bazaarvoice.dropwizard.redirect;
 
+import com.google.common.base.Function;
+import com.google.common.base.Functions;
+
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Redirects any non-HTTPS requests to the equivalent HTTPS URL.  This redirect is very simplistic and only relies on
@@ -18,6 +23,7 @@ import java.net.UnknownHostException;
  */
 public class HttpsRedirect implements Redirect {
     private final boolean allowPrivateIps;
+    private final Function<String, String> serverNameMapper;
 
     public HttpsRedirect() {
         this(true);
@@ -30,6 +36,21 @@ public class HttpsRedirect implements Redirect {
      */
     public HttpsRedirect(boolean allowPrivateIps) {
         this.allowPrivateIps = allowPrivateIps;
+        serverNameMapper = Functions.identity();
+    }
+
+    /**
+     *
+     * @param allowPrivateIps If {@code true} then requests from private ip addresses won't be redirected.  An ip is
+     *                        considered to be private if it is a loopback address, a link local address, or a site
+     *                        local address.
+     * @param mapper          Function to map server name to a new name
+     */
+    public HttpsRedirect(boolean allowPrivateIps, Function<String, String> mapper) {
+        this.allowPrivateIps = allowPrivateIps;
+
+        checkNotNull(mapper);
+        serverNameMapper = mapper;
     }
 
     @Override
@@ -46,7 +67,9 @@ public class HttpsRedirect implements Redirect {
         return null;
     }
 
-    /** Determine whether or not the provided address is private. */
+    /**
+     * Determine whether or not the provided address is private.
+     */
     private boolean isPrivateIp(String address) {
         InetAddress ip;
         try {
@@ -58,7 +81,9 @@ public class HttpsRedirect implements Redirect {
         return ip.isLoopbackAddress() || ip.isLinkLocalAddress() || ip.isSiteLocalAddress();
     }
 
-    /** Return the full URL that should be redirected to including query parameters. */
+    /**
+     * Return the full URL that should be redirected to including query parameters.
+     */
     private String getRedirectUrl(HttpServletRequest request, String newScheme) {
         String serverName = request.getServerName();
         String uri = request.getRequestURI();
@@ -67,7 +92,7 @@ public class HttpsRedirect implements Redirect {
         StringBuilder redirect = new StringBuilder(100);
         redirect.append(newScheme);
         redirect.append("://");
-        redirect.append(serverName);
+        redirect.append(serverNameMapper.apply(serverName));
         redirect.append(uri);
 
         if (query != null) {
