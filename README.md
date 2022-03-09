@@ -85,3 +85,18 @@ public class MyApplication extends Application<...> {
 }
 ```
 
+If you have to combine http to https redirect and path redirect at the same time, then you want to do the following:
+```java
+public class MyApplication extends Application<...> {
+  // ...
+
+  @Override
+  public void initialize(Bootstrap<?> bootstrap) {
+    bootstrap.addBundle(new RedirectBundle(
+        bootstrap.addBundle(new RedirectBundle(new PathRedirect("/", "docs"), new HttpsRedirect()));
+    ));
+  }
+
+  // ...
+}
+```
